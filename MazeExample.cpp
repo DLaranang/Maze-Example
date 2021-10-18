@@ -23,6 +23,36 @@ using namespace std;
 
 
 void SolveMaze(int row, int col, char maze[][100], int rowSz, int colSz, bool& foundEnd, string& finaldir, string currDir) {
+    // Base case: Finished already
+    if(foundEnd){
+        return;
+    }
+    // Base case: Check bounds
+    if(row < 0 || row >= rowSz || col < 0 || col >= colSz){
+        return;
+    }
+    // Base case: breadcrumbs and walls
+    if(maze[row][col] == '.' || maze[row][col] == '@'){
+        return;
+    }
+    // Base case: Found finish
+    if(maze[row][col] == 'F'){
+        foundEnd = true;
+        finaldir = currDir;
+        return;
+    }
+
+    maze[row][col] = '.'; // Put down breadcrumbs
+
+    // General case - Each recursive call must be one step smaller.
+    SolveMaze( row - 1, col, maze, rowSz, colSz, foundEnd, finaldir, currDir+"U");   //Up
+    SolveMaze( row + 1, col, maze, rowSz, colSz, foundEnd, finaldir, currDir+"D");   //Down
+    SolveMaze( row, col - 1, maze, rowSz, colSz, foundEnd, finaldir, currDir+"L");   //Left
+    SolveMaze( row, col + 1, maze, rowSz, colSz, foundEnd, finaldir, currDir+"R");   //Right
+
+    if(!foundEnd){
+        maze[row][col] = ' '; // If I didn't find the end, pick up the breadcrumb
+    }
 
 }
 
